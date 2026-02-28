@@ -1,19 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: DevOps Assignment - EC2 Infrastructure Setup (Region-safe AMI)
+Description: DevOps Assignment - EC2 Infrastructure Setup (Mumbai Region Safe)
 
 Parameters:
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
-    Description: Name of an existing EC2 KeyPair to enable SSH access
+    Description: Existing EC2 KeyPair name for SSH access
 
-Mappings:
-  AWSRegionToAMI:
-    eu-west-1:   # Ireland
-      AMI: ami-0a422d70f727fe93e
-    eu-central-1: # Frankfurt (optional)
-      AMI: ami-0c1c30571d2dae5c9
-    us-east-1:   # N. Virginia (optional)
-      AMI: ami-0c02fb55956c7d316
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64
 
 Resources:
   DevOpsSecurityGroup:
@@ -34,7 +29,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
-      ImageId: !FindInMap [AWSRegionToAMI, !Ref "AWS::Region", AMI]
+      ImageId: !Ref LatestAmiId
       KeyName: !Ref KeyName
       SecurityGroupIds:
         - !Ref DevOpsSecurityGroup
@@ -43,9 +38,6 @@ Resources:
           Value: DevOpsServer
 
 Outputs:
-  InstanceId:
-    Description: Instance ID
-    Value: !Ref DevOpsInstance
   PublicIP:
-    Description: Public IP of the instance
+    Description: Public IP of the EC2 instance
     Value: !GetAtt DevOpsInstance.PublicIp
