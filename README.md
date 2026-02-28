@@ -1,4 +1,4 @@
-Part 1 – Infrastructure Setup Using Infrastructure as Code
+## Part 1 – Infrastructure Setup Using Infrastructure as Code
 
 The infrastructure layer of this project is implemented using AWS CloudFormation, which enables automated provisioning of cloud resources through declarative configuration templates. Instead of manually creating resources through the AWS console, infrastructure components are defined in a YAML template (ec2-template.yaml) to ensure repeatability, consistency, and version control.
 
@@ -16,7 +16,7 @@ The architectural representation of this deployment is illustrated in architectu
 
 This implementation demonstrates the core principle of Infrastructure as Code (IaC), where infrastructure becomes programmable, version-controlled, and reproducible. Such an approach improves deployment reliability, enhances collaboration, and aligns with modern DevOps practices.
 
-Part 2 – Configuration Management Using Ansible
+## Part 2 – Configuration Management Using Ansible
 
 Following infrastructure provisioning, configuration management is implemented using Ansible to automate the setup of the EC2 instance. Configuration management ensures that the provisioned infrastructure is prepared consistently for application deployment without manual intervention.
 
