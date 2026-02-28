@@ -1,0 +1,20 @@
+---
+- name: Deploy Dockerized web app
+  hosts: webserver
+  become: yes
+
+  tasks:
+    - name: Copy application folder to server
+      copy:
+        src: ../app/
+        dest: /home/ec2-user/app/
+        mode: "0755"
+
+    - name: Build Docker image
+      command: docker build -t devops-app /home/ec2-user/app
+
+    - name: Stop old container if running
+      shell: docker rm -f devops-container || true
+
+    - name: Run container on port 80
+      command: docker run -d --name devops-container -p 80:80 devops-app
