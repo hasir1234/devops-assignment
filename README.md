@@ -29,3 +29,6 @@ By codifying server configuration, this approach eliminates inconsistencies that
 The integration of CloudFormation (infrastructure provisioning) and Ansible (configuration management) reflects a layered DevOps architecture in which infrastructure and configuration concerns are separated but automated cohesively. This structured automation enhances scalability, operational efficiency, and reliability.
 
 Together, Part 1 and Part 2 establish the foundational environment required for container deployment in subsequent phases of the project, while demonstrating core DevOps principles of automation, consistency, and maintainability.
+## Part 3 – Docker Container Deployment
+
+A sample Flask web application is containerized using Docker (app/Dockerfile). Deployment is automated using Ansible (ansible/deploy_container.yml), which transfers the application to the server, builds the Docker image, and runs the container exposing HTTP on port 80.
