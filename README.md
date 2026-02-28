@@ -1,176 +1,31 @@
-DevOps Assignment Project
+Part 1 – Infrastructure Setup Using Infrastructure as Code
 
-This project demonstrates Infrastructure Automation, Configuration Management, and DevOps principles using AWS CloudFormation and Ansible.
+The infrastructure layer of this project is implemented using AWS CloudFormation, which enables automated provisioning of cloud resources through declarative configuration templates. Instead of manually creating resources through the AWS console, infrastructure components are defined in a YAML template (ec2-template.yaml) to ensure repeatability, consistency, and version control.
 
-Part 1 – Infrastructure Setup (AWS CloudFormation)
-Objective
+The CloudFormation template defines an EC2 instance deployed within the default AWS Virtual Private Cloud (VPC). The selected instance type is t2.micro, which aligns with AWS Free Tier eligibility while remaining sufficient for lightweight application hosting. This instance represents the compute layer responsible for running the containerized application in subsequent stages of the project.
 
-To automate the provisioning of cloud infrastructure required to host a server instance using Infrastructure as Code (IaC).
+A dedicated security group is configured as part of the template to manage inbound traffic. The security configuration permits:
 
-Tool Used
+SSH access (Port 22) for administrative connectivity.
 
-AWS CloudFormation
+HTTP access (Port 80) for web application exposure.
 
-Infrastructure as Code (IaC)
+By explicitly defining these rules, the infrastructure ensures controlled external access while maintaining security boundaries. The template approach eliminates configuration drift and ensures that identical infrastructure can be provisioned across multiple environments.
 
-CloudFormation is used to define cloud infrastructure declaratively in a YAML template. This eliminates manual configuration and ensures repeatable, consistent deployments.
+The architectural representation of this deployment is illustrated in architecture-part1.png, which outlines the relationship between the internet gateway, security group, EC2 instance, and the underlying network environment.
 
-The infrastructure template file:
+This implementation demonstrates the core principle of Infrastructure as Code (IaC), where infrastructure becomes programmable, version-controlled, and reproducible. Such an approach improves deployment reliability, enhances collaboration, and aligns with modern DevOps practices.
 
-ec2-template.yaml
-Resources Provisioned
+Part 2 – Configuration Management Using Ansible
 
-The CloudFormation template provisions the following resources:
+Following infrastructure provisioning, configuration management is implemented using Ansible to automate the setup of the EC2 instance. Configuration management ensures that the provisioned infrastructure is prepared consistently for application deployment without manual intervention.
 
-1. EC2 Instance
+Ansible was selected due to its agentless architecture, SSH-based communication model, and strong support for declarative automation. The configuration logic is defined within ansible/playbook.yml, while target host definitions are specified in ansible/inventory.ini.
 
-Instance Type: t2.micro (Free Tier eligible)
+The playbook automates several essential server configuration tasks. These include updating system packages, installing Docker as the container runtime environment, starting the Docker service, enabling it to launch automatically on system boot, and configuring user permissions to allow container execution without elevated privileges.
 
-Operating System: Amazon Linux
+By codifying server configuration, this approach eliminates inconsistencies that often arise from manual setup processes. Ansible ensures idempotent execution, meaning repeated runs of the playbook will maintain the desired system state without introducing unintended changes.
 
-Tagged as: DevOpsServer
+The integration of CloudFormation (infrastructure provisioning) and Ansible (configuration management) reflects a layered DevOps architecture in which infrastructure and configuration concerns are separated but automated cohesively. This structured automation enhances scalability, operational efficiency, and reliability.
 
-Deployed inside default AWS VPC
-
-2. Security Group
-
-The security group is configured to allow:
-
-SSH access (Port 22) → Remote administration
-
-HTTP access (Port 80) → Web application access
-
-This ensures proper networking and secure access configuration.
-
-Networking Configuration
-
-The EC2 instance is deployed inside the default AWS VPC with:
-
-Public IP address
-
-Internet access
-
-Security group rules controlling inbound traffic
-
-Architecture Overview
-
-The infrastructure architecture includes:
-
-User / Internet
-↓
-Security Group (Port 22, 80)
-↓
-EC2 Instance (t2.micro)
-↓
-Default VPC Network
-
-The architecture diagram is included as:
-
-architecture-part1.png
-Benefits of Infrastructure as Code
-
-Eliminates manual provisioning errors
-
-Enables repeatable deployments
-
-Improves scalability
-
-Supports DevOps automation practices
-
-Ensures consistent security configuration
-
-Part 2 – Configuration Management (Ansible)
-Objective
-
-To automate server configuration after infrastructure provisioning using Ansible.
-
-Tool Used
-
-Ansible (Agentless Configuration Management Tool)
-
-Ansible was selected due to its simplicity, SSH-based architecture, and suitability for cloud environments.
-
-The automation files are located in:
-
-ansible/playbook.yml
-ansible/inventory.ini
-Automation Workflow
-
-When executed, the Ansible playbook performs the following tasks:
-
-1. System Update
-
-Updates all system packages to ensure the server is secure and up to date.
-
-2. Docker Installation
-
-Installs Docker container runtime required to run application containers.
-
-3. Docker Service Start
-
-Starts the Docker service immediately after installation.
-
-4. Enable Docker on Boot
-
-Configures Docker to automatically start whenever the server reboots.
-
-5. Configure User Permissions
-
-Adds the ec2-user to the Docker group to allow Docker usage without requiring sudo privileges.
-
-6. Verification
-
-Confirms successful Docker installation by checking the installed version.
-
-Example Execution Command
-
-When AWS is active, the playbook would be executed using:
-
-ansible-playbook -i inventory.ini playbook.yml
-
-Ansible connects via SSH and executes tasks sequentially.
-
-Configuration Architecture Flow
-
-CloudFormation
-↓
-EC2 Instance Provisioned
-↓
-Ansible Playbook Execution
-↓
-Docker Installed & Configured
-↓
-Server Ready for Container Deployment
-
-DevOps Alignment
-
-This configuration management approach ensures:
-
-Infrastructure provisioning (Part 1)
-
-Automated server setup (Part 2)
-
-Reduced manual intervention
-
-Consistent environment configuration
-
-Reproducible deployments
-
-Implementation Note
-
-Due to AWS account activation constraints during development, live execution of infrastructure provisioning was limited. However, the Infrastructure-as-Code template and Ansible automation logic are fully implemented and production-ready for execution in a live AWS environment.
-
-Summary
-
-Part 1 implements Infrastructure as Code using CloudFormation.
-Part 2 implements Configuration Management using Ansible.
-
-Together, they demonstrate core DevOps automation principles:
-
-Infrastructure automation
-
-Configuration automation
-
-Security configuration
-
-Service lifecycle management
+Together, Part 1 and Part 2 establish the foundational environment required for container deployment in subsequent phases of the project, while demonstrating core DevOps principles of automation, consistency, and maintainability.
